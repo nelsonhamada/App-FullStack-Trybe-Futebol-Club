@@ -3,11 +3,12 @@ import TeamModel from '../models/TeamModel';
 
 export default class TeamService {
   constructor(
-    private teamModel: ITeamModel = new TeamModel(),
+    public teamModel: ITeamModel = new TeamModel(),
   ) { }
 
   public async getAllTeams() {
     const allTeams = await this.teamModel.findAll();
+    console.log(allTeams);
     return { status: 'SUCCESSFUL', data: allTeams };
   }
 

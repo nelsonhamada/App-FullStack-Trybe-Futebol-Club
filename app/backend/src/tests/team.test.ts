@@ -33,5 +33,14 @@ describe('Testa rota get de /team', function () {
 
     expect(status).to.equal(200);
     expect(body).to.deep.equal(oneTeam);
+  });
+
+  it('Retorna erro quando id não encontrado', async function () {
+    sinon.stub(SequelizeTeam, 'findOne').resolves(null);
+    const { status, body } = await chai.request(app).get('/teams/1');
+
+    expect(status).to.be.equal(404);
+    expect(body.message).to.equal('Team not found')
+
   })
 });
