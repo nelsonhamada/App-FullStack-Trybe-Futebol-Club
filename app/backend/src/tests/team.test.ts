@@ -13,6 +13,9 @@ chai.use(chaiHttp);
 const { expect } = chai;
 
 describe('Testa rota get de /team', function () {
+  afterEach(() => {
+    sinon.restore();
+  })
  
   it('Retorna todos os times', async function() {
     sinon.stub(SequelizeTeam, 'findAll').resolves(allTeams as any);
