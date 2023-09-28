@@ -4,9 +4,7 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import Example from '../database/models/ExampleModel';
 
-import { Response } from 'superagent';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import { allTeams, oneTeam } from './mocks/team';
 
@@ -33,6 +31,4 @@ describe('Testa rota get de /team', function () {
     expect(status).to.equal(200);
     expect(body).to.deep.equal(oneTeam);
   })
-
-
 });
