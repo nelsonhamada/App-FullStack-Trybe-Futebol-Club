@@ -5,3 +5,7 @@ export interface IUser {
   email: string;
   password: string;
 }
+
+export interface IUserModel {
+  findByEmail(email: IUser['email']): Promise<IUser | null>;
+}
