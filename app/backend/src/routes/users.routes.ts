@@ -9,7 +9,12 @@ const router = Router();
 router.post(
   '/',
   Validations.validateLogin,
-  Validations.validateFields,
+  (req: Request, res: Response) => userController.requestLogin(req, res),
+);
+
+router.get(
+  '/role',
+  Validations.validateToken,
   (req: Request, res: Response) => userController.requestLogin(req, res),
 );
 

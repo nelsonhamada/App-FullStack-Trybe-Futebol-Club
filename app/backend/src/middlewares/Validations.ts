@@ -1,4 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
+import * as jwt from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
+
+declare module 'jsonwebtoken' {
+  export interface JwtPayload {
+    role: string;
+  }
+}
 
 export default class Validations {
   static validateLogin(req: Request, res: Response, next: NextFunction) {
@@ -27,5 +35,21 @@ export default class Validations {
     }
 
     next();
+  }
+
+  static async validateToken(req: Request, res: Response, next: NextFunction) {
+    const { authorization } = req.headers;
+    const jwtSecret = process.env.JWT_SECRET || 'padrao';
+
+    try {
+      if (!authorization) return res.status(401).json({ message: 'Token not found' });
+      const token = authorization.split(' ')[1];
+      const decode = jwt.verify(token, jwtSecret) as JwtPayload;
+
+      res.status(200).json(decode.role);
+      next();
+    } catch (error) {
+      return res.status(401).json({ message: 'Expired or invalid token' });
+    }
   }
 }

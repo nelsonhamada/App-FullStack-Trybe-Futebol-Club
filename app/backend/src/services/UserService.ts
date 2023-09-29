@@ -20,6 +20,7 @@ export default class UserService {
     const token = jwt.sign({
       id: user.id,
       name: user.username,
+      role: user.role,
     }, process.env.JWT_SECRET || 'padrao', {
       expiresIn: '7d',
     });
