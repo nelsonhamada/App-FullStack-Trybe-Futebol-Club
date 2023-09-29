@@ -7,6 +7,7 @@ export default class UserService {
   constructor(
     public userModel: IUserModel = new UserModel(),
   ) { }
+  // a
 
   public async requestLogin(email: string, password: string) {
     const invalidMessage = 'Invalid email or password';
