@@ -39,17 +39,21 @@ export default class Validations {
 
   static async validateToken(req: Request, res: Response, next: NextFunction) {
     const { authorization } = req.headers;
-    const jwtSecret = process.env.JWT_SECRET || 'padrao';
 
+    const jwtSecret = process.env.JWT_SECRET || 'padrao';
     try {
       if (!authorization) return res.status(401).json({ message: 'Token not found' });
-      const token = authorization.split(' ')[1];
-      const decode = jwt.verify(token, jwtSecret) as JwtPayload;
 
+      const token = authorization.split(' ')[1];
+      // if (type !== 'Bearer' || !token) {
+      //   return res.status(401).json({ message: 'Token must be a valid token' });
+      // }
+
+      const decode = jwt.verify(token, jwtSecret) as JwtPayload;
       res.status(200).json(decode.role);
       next();
     } catch (error) {
-      return res.status(401).json({ message: 'Expired or invalid token' });
+      return res.status(401).json({ message: 'Token must be a valid token' });
     }
   }
 }
