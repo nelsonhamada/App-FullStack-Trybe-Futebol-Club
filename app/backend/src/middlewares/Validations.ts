@@ -45,10 +45,6 @@ export default class Validations {
       if (!authorization) return res.status(401).json({ message: 'Token not found' });
 
       const token = authorization.split(' ')[1];
-      // if (type !== 'Bearer' || !token) {
-      //   return res.status(401).json({ message: 'Token must be a valid token' });
-      // }
-
       const decode = jwt.verify(token, jwtSecret) as JwtPayload;
       res.status(200).json(decode.role);
       next();
