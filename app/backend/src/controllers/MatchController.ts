@@ -37,4 +37,12 @@ export default class MatchController {
     }
     return res.status(200).json(serviceResponse.data);
   }
+
+  public async createNewMatch(req: Request, res: Response) {
+    const serviceResponse = await this.matchService.creatNewMatch(req.body);
+    if (serviceResponse.status !== 'SUCCESSFUL') {
+      return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
+    }
+    return res.status(201).json(serviceResponse.data);
+  }
 }

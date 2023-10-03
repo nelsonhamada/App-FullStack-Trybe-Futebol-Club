@@ -3,11 +3,15 @@ import {
   Model,
   InferAttributes,
   CreationOptional,
+  InferCreationAttributes,
 } from 'sequelize';
 import db from '.';
 import SequelizeTeam from './SequelizeTeam';
 
-export default class SequelizeMatch extends Model<InferAttributes<SequelizeMatch>> {
+export default class SequelizeMatch extends Model<
+InferAttributes<SequelizeMatch>,
+InferCreationAttributes<SequelizeMatch>
+> {
   declare id: CreationOptional<number>;
   declare homeTeamId: number;
   declare homeTeamGoals: number;

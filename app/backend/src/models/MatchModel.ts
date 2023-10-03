@@ -36,4 +36,11 @@ export default class MatchModel implements IMatchModel {
     await this.model.update(data, { where: { id } });
     return this.findById(id);
   }
+
+  async create(data: NewEntity<IMatch>): Promise<IMatch> {
+    const finalObject = { ...data, inProgress: true };
+    const newMatch = await this.model.create(finalObject);
+
+    return newMatch;
+  }
 }

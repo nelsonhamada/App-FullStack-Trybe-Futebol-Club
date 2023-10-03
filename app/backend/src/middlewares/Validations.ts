@@ -61,4 +61,17 @@ export default class Validations {
     }
     next();
   }
+
+  static async validateNewMatch(req: Request, res: Response, next: NextFunction) {
+    const { homeTeamId, awayTeamId, awayTeamGoals, homeTeamGoals } = req.body;
+    const verify = homeTeamGoals && awayTeamGoals && homeTeamId && awayTeamId;
+    if (homeTeamId === awayTeamId) {
+      return res.status(422)
+        .json({ message: 'It is not possible to create a match with two equal teams' });
+    }
+    if (!verify) {
+      return res.status(400).end();
+    }
+    next();
+  }
 }

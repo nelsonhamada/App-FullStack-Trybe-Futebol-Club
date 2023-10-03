@@ -5,7 +5,7 @@ export interface IMatch extends Identifiable {
   homeTeamGoals: number;
   awayTeamId: number;
   awayTeamGoals: number;
-  inProgress: boolean;
+  inProgress?: boolean;
 }
 
 export interface IMatchScore {
@@ -18,4 +18,5 @@ export interface IMatchModel {
   findAll: () => Promise<IMatch[]>;
   findAllByQuery: (query: string) => Promise<IMatch[]>;
   update: (id: IMatch['id'], data: Partial<NewEntity<IMatch>>) => Promise<IMatch | null>;
+  create: (data: IMatch) => Promise<IMatch>
 }

@@ -1,9 +1,12 @@
-import { IMatchModel, IMatchScore } from '../Interfaces/IMatches';
+import TeamModel from '../models/TeamModel';
+import { NewEntity } from '../Interfaces';
+import { IMatch, IMatchScore } from '../Interfaces/IMatches';
 import MatchModel from '../models/MatchModel';
 
 export default class MatchService {
   constructor(
-    public matchModel: IMatchModel = new MatchModel(),
+    public matchModel = new MatchModel(),
+    public teamModel = new TeamModel(),
   ) { }
 
   public async getAllMatches(
@@ -20,7 +23,7 @@ export default class MatchService {
   public async updateProgress(matchId: number) {
     const match = await this.matchModel.findById(matchId);
     if (match === null) {
-      return { status: 'NOT FOUND', data: { message: 'Match not found' } };
+      return { status: 'NOT_FOUND', data: { message: 'Match not found' } };
     }
     const { id, inProgress, ...rest } = match;
     await this.matchModel.update(id, { inProgress: false, ...rest });
@@ -30,10 +33,20 @@ export default class MatchService {
   public async updateScoreboard(matchId: number, data:IMatchScore) {
     const match = await this.matchModel.findById(matchId);
     if (match === null) {
-      return { status: 'NOT FOUND', data: { message: 'Match not found' } };
+      return { status: 'NOT_FOUND', data: { message: 'Match not found' } };
     }
     const { id } = match;
     await this.matchModel.update(id, data);
     return { status: 'SUCCESSFUL', data: { message: 'Updated Scoreboard' } };
+  }
+
+  public async creatNewMatch(data: NewEntity<IMatch>) {
+    const homeTeam = await this.teamModel.findById(Number(data.homeTeamId));
+    const awayTeam = await this.teamModel.findById(Number(data.awayTeamId));
+    if (homeTeam === null || awayTeam === null) {
+      return { status: 'NOT_FOUND', data: { message: 'There is no team with such id!' } };
+    }
+    const newMatch = await this.matchModel.create(data);
+    return { status: 'SUCCESSFUL', data: newMatch };
   }
 }
