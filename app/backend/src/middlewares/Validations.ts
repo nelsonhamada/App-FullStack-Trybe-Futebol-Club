@@ -11,13 +11,14 @@ declare module 'jsonwebtoken' {
 export default class Validations {
   static validateLogin(req: Request, res: Response, next: NextFunction) {
     const { email, password } = req.body;
+    const messageError = 'All fields must be filled';
 
     if (!email) {
-      return res.status(400).json({ message: 'All fields must be filled' });
+      return res.status(400).json({ message: messageError });
     }
 
     if (!password) {
-      return res.status(400).json({ message: 'All fields must be filled' });
+      return res.status(400).json({ message: messageError });
     }
 
     next();
@@ -51,5 +52,13 @@ export default class Validations {
     } catch (error) {
       return res.status(401).json({ message: 'Token must be a valid token' });
     }
+  }
+
+  static async validateScoreboard(req: Request, res: Response, next: NextFunction) {
+    const { homeTeamGoals, awayTeamGoals } = req.body;
+    if (!homeTeamGoals || !awayTeamGoals) {
+      return res.status(400).json({ message: 'All fields must be filled' });
+    }
+    next();
   }
 }

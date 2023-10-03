@@ -17,15 +17,24 @@ export default class MatchController {
       return res.status(200).json(serviceResponse.data);
     }
     const serviceResponse = await this.matchService.getAllMatches();
-    res.status(200).json(serviceResponse.data);
+    return res.status(200).json(serviceResponse.data);
   }
 
   public async updateProgress(req: Request, res: Response) {
     const { id } = req.params;
     const serviceResponse = await this.matchService.updateProgress(Number(id));
-    if (serviceResponse.status !== 'SUCCESFUL') {
+    if (serviceResponse.status !== 'SUCCESSFUL') {
       return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
     }
-    res.status(200).json(serviceResponse.data);
+    return res.status(200).json(serviceResponse.data);
+  }
+
+  public async updateScoreboard(req: Request, res: Response) {
+    const { id } = req.params;
+    const serviceResponse = await this.matchService.updateScoreboard(Number(id), req.body);
+    if (serviceResponse.status !== 'SUCCESSFUL') {
+      return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
+    }
+    return res.status(200).json(serviceResponse.data);
   }
 }

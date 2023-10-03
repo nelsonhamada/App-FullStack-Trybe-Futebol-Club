@@ -8,9 +8,14 @@ export interface IMatch extends Identifiable {
   inProgress: boolean;
 }
 
+export interface IMatchScore {
+  homeTeamGoals: number,
+  awayTeamGoals: number,
+}
+
 export interface IMatchModel {
   findById: (id: IMatch['id']) => Promise<IMatch | null>;
   findAll: () => Promise<IMatch[]>;
   findAllByQuery: (query: string) => Promise<IMatch[]>;
-  updateProgress: (id: IMatch['id'], data: Partial<NewEntity<IMatch>>) => Promise<IMatch | null>;
+  update: (id: IMatch['id'], data: Partial<NewEntity<IMatch>>) => Promise<IMatch | null>;
 }

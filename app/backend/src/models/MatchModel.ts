@@ -32,7 +32,7 @@ export default class MatchModel implements IMatchModel {
     return matches;
   }
 
-  async updateProgress(id: IMatch['id'], data: Partial<NewEntity<IMatch>>): Promise<IMatch | null> {
+  async update(id: IMatch['id'], data: Partial<NewEntity<IMatch>>): Promise<IMatch | null> {
     await this.model.update(data, { where: { id } });
     return this.findById(id);
   }

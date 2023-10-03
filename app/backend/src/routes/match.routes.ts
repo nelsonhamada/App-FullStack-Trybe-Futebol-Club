@@ -14,4 +14,11 @@ router.patch(
   (req: Request, res: Response) => matchController.updateProgress(req, res),
 );
 
+router.patch(
+  '/:id',
+  Validations.validateToken,
+  Validations.validateScoreboard,
+  (req: Request, res: Response) => matchController.updateScoreboard(req, res),
+);
+
 export default router;
