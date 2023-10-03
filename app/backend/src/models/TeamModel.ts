@@ -11,7 +11,6 @@ export default class TeamModel implements ITeamModel {
 
   async findById(id: ITeam['id']) {
     const team = await this.model.findOne({ where: { id } });
-    if (team === null) return null;
     return team;
   }
 }

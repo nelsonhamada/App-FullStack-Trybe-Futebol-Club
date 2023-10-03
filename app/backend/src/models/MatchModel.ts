@@ -1,9 +1,15 @@
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import SequelizeMatch from '../database/models/SequelizeMatche';
-import { IMatchModel } from '../Interfaces/IMatches';
+import { IMatch, IMatchModel } from '../Interfaces/IMatches';
+import { NewEntity } from '../Interfaces';
 
 export default class MatchModel implements IMatchModel {
   public model = SequelizeMatch;
+
+  async findById(id: IMatch['id']) {
+    const match = await this.model.findOne({ where: { id } });
+    return match;
+  }
 
   async findAll() {
     const matches = await this.model.findAll({
@@ -24,5 +30,10 @@ export default class MatchModel implements IMatchModel {
       ],
     });
     return matches;
+  }
+
+  async updateProgress(id: IMatch['id'], data: Partial<NewEntity<IMatch>>): Promise<IMatch | null> {
+    await this.model.update(data, { where: { id } });
+    return this.findById(id);
   }
 }

@@ -8,9 +8,6 @@ export default class UserModel implements IUserModel {
     const user = await this.model.findOne({
       where: { email },
     });
-
-    if (!user) return null;
-
     return user;
   }
 }

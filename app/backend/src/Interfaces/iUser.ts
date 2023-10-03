@@ -1,5 +1,6 @@
-export interface IUser {
-  id:number;
+import { Identifiable } from '.';
+
+export interface IUser extends Identifiable{
   username: string;
   role: string;
   email: string;

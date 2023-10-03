@@ -46,7 +46,7 @@ export default class Validations {
 
       const token = authorization.split(' ')[1];
       const decode = jwt.verify(token, jwtSecret) as JwtPayload;
-      res.status(200).json({ role: decode.role });
+      if (req.originalUrl === '/login/role') return res.status(200).json({ role: decode.role });
       next();
     } catch (error) {
       return res.status(401).json({ message: 'Token must be a valid token' });

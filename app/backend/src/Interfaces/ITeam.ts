@@ -1,7 +1,7 @@
+import { Identifiable } from '.';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 
-export interface ITeam {
-  id: number;
+export interface ITeam extends Identifiable{
   teamName: string;
 }
 
