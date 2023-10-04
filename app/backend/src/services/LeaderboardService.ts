@@ -72,4 +72,19 @@ export default class LeaderboardService {
 
     return { status: 'SUCCESSFUL', data: finalLeaderboard };
   }
+
+  public async getAwayLeaderboard(): Promise<ServiceResponse<IHomeEdit[]>> {
+    const allMatches = await this.matchModel.findAllByQuery('false');
+
+    const finalLeaderboard = await Promise.all(allMatches
+      .map(async (team) => {
+        const teamMatches = await this.matchModel.findByAwayTeam(team.awayTeamId);
+        const teamInstance = await this.teamModel.findById(team.awayTeamId);
+        const teamName = teamInstance?.teamName ?? '';
+        const editLeaderboard = LeaderboardService.editPatternLeaderboard(teamMatches);
+        return { name: teamName, ...editLeaderboard };
+      }));
+
+    return { status: 'SUCCESSFUL', data: finalLeaderboard };
+  }
 }
