@@ -32,6 +32,12 @@ export default class MatchModel implements IMatchModel {
     return matches;
   }
 
+  async findByHomeTeam(homeTeamId: number) {
+    const matches = await this.model.findAll({ where: { homeTeamId, inProgress: 'false' },
+      include: [{ model: SequelizeTeam, as: 'homeTeam', attributes: ['teamName'] }] });
+    return matches;
+  }
+
   async update(id: IMatch['id'], data: Partial<NewEntity<IMatch>>): Promise<IMatch | null> {
     await this.model.update(data, { where: { id } });
     return this.findById(id);
