@@ -49,4 +49,12 @@ describe('Testa a rota /user e derivadas.', function () {
     expect(body).to.be.deep.equal({ message: 'Token not found' })
 
   });
+
+  it('Verifica token em /login/role.', async function () {
+    const { status, body } = (await chai.request(app).get('/login/role').set('authorization', 'invalid-token'));
+
+    expect(status).to.be.equal(401);
+    expect(body).to.be.deep.equal({ message: 'Token must be a valid token' })
+
+  });
 })
