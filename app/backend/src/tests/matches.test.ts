@@ -8,7 +8,8 @@ import { app } from '../app';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import { allTeams, oneTeam } from './mocks/team';
 import SequelizeMatch from '../database/models/SequelizeMatche';
-import { allMatches, matchesEnded, matchesInProgress } from './mocks/matches';
+import { allMatches, matchesEnded, matchesInProgress, oneMatch } from './mocks/matches';
+import { IMatch } from '../Interfaces/IMatches';
 
 chai.use(chaiHttp);
 
@@ -26,7 +27,7 @@ describe('Testa rota de /matches', function () {
 
     expect(status).to.be.equal(200);
     expect(body).to.be.deep.equal(allMatches);
-  })
+  });
 
   it('Retorna todas as partidas em andamento', async function () {
     sinon.stub(SequelizeMatch, 'findAll').resolves(matchesInProgress as any);
@@ -35,7 +36,7 @@ describe('Testa rota de /matches', function () {
 
     expect(status).to.be.equal(200);
     expect(body).to.be.deep.equal(matchesInProgress);
-  })
+  });
 
   it('Retorna todas as partidas finalizadas', async function () {
     sinon.stub(SequelizeMatch, 'findAll').resolves(matchesEnded as any);
@@ -44,5 +45,6 @@ describe('Testa rota de /matches', function () {
 
     expect(status).to.be.equal(200);
     expect(body).to.be.deep.equal(matchesEnded);
-  })
+  });
+
 })
