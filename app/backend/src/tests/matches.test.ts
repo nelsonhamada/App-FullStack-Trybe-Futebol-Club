@@ -1,5 +1,6 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
+import * as jwt from 'jsonwebtoken';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
@@ -46,5 +47,13 @@ describe('Testa rota de /matches', function () {
     expect(status).to.be.equal(200);
     expect(body).to.be.deep.equal(matchesEnded);
   });
+ 
+  it('Finaliza partida ao chamar endpoint matches/id/finish', async function () {
+    sinon.stub(SequelizeMatch, 'update').resolves();
+    sinon.stub(jwt, 'verify').returns({ role: 'admin'} as any)
 
+    const { status, body } = await chai.request(app).patch('/matches/1/finish').set('authorization', 'validToken');
+    expect(status).to.be.equal(200);
+    expect(body).to.be.deep.equal({ message: 'Finished' })
+  })
 })
