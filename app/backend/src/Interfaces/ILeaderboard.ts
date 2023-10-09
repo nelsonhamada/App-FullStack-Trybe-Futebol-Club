@@ -7,6 +7,7 @@ export interface ICalculateResults {
 export interface ICalculateGoals {
   goalsFavor: number,
   goalsOwn: number,
+  goalsBalance: number,
 }
 
 export interface IHomeMatches {
@@ -19,7 +20,21 @@ export interface IHomeMatches {
 }
 
 export interface IHomeEdit extends ICalculateResults, ICalculateGoals {
-  name: string,
+  name?: string,
   totalPoints: number,
   totalGames: number,
+  efficiency: string,
 }
+
+// {
+//   "name": "Avaí/Kindermann",
+//   "totalPoints": 1,
+//   "totalGames": 3,
+//   "efficiency": "11.11",
+//   "totalVictories": 0,
+//   "totalDraws": 1,
+//   "totalLosses": 2,
+//   "goalsFavor": 3,
+//   "goalsOwn": 7,
+//   "goalsBalance": -4
+// }

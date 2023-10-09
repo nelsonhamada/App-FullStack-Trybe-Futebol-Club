@@ -37,13 +37,31 @@ export default class LeaderboardService {
     const homeTeamGoals: ICalculateGoals = {
       goalsFavor: 0,
       goalsOwn: 0,
+      goalsBalance: 0,
     };
 
     team.forEach((match) => {
       homeTeamGoals.goalsFavor += match.homeTeamGoals;
+      homeTeamGoals.goalsBalance += match.homeTeamGoals;
       homeTeamGoals.goalsOwn += match.awayTeamGoals;
+      homeTeamGoals.goalsBalance -= match.awayTeamGoals;
     });
     return homeTeamGoals;
+  }
+
+  public static toSort(team: IHomeEdit[]) {
+    return team.sort((a, b) => {
+      if (a.totalPoints !== b.totalPoints) {
+        return b.totalPoints - a.totalPoints;
+      }
+      if (a.totalVictories !== b.totalVictories) {
+        return b.totalVictories - a.totalVictories;
+      }
+      if (a.goalsBalance !== b.goalsBalance) {
+        return b.goalsBalance - a.goalsBalance;
+      }
+      return b.goalsFavor - a.goalsFavor;
+    });
   }
 
   public static editPatternLeaderboard(team: IHomeMatches[]) {
@@ -53,38 +71,43 @@ export default class LeaderboardService {
     return {
       totalPoints: points,
       totalGames: team.length,
+      efficiency: ((points / (team.length * 3)) * 100).toFixed(2),
       ...results,
       ...goals,
     };
   }
 
   public async getHomeLeaderboard(): Promise<ServiceResponse<IHomeEdit[]>> {
-    const allMatches = await this.matchModel.findAllByQuery('false');
+    // const allMatches = await this.matchModel.findAllByQuery('false');
+    const allTeams = await this.teamModel.findAll();
 
-    const finalLeaderboard = await Promise.all(allMatches
+    const finalLeaderboard = await Promise.all(allTeams
       .map(async (team) => {
-        const teamMatches = await this.matchModel.findByHomeTeam(team.homeTeamId);
-        const teamInstance = await this.teamModel.findById(team.homeTeamId);
+        const teamMatches = await this.matchModel.findByHomeTeam(team.id);
+        const teamInstance = await this.teamModel.findById(team.id);
         const teamName = teamInstance?.teamName ?? '';
         const editLeaderboard = LeaderboardService.editPatternLeaderboard(teamMatches);
         return { name: teamName, ...editLeaderboard };
       }));
+    const sortLeaderboard = LeaderboardService.toSort(finalLeaderboard);
 
-    return { status: 'SUCCESSFUL', data: finalLeaderboard };
+    return { status: 'SUCCESSFUL', data: sortLeaderboard };
   }
 
   public async getAwayLeaderboard(): Promise<ServiceResponse<IHomeEdit[]>> {
-    const allMatches = await this.matchModel.findAllByQuery('false');
+    // const allMatches = await this.matchModel.findAllByQuery('false');
+    const allTeams = await this.teamModel.findAll();
 
-    const finalLeaderboard = await Promise.all(allMatches
+    const finalLeaderboard = await Promise.all(allTeams
       .map(async (team) => {
-        const teamMatches = await this.matchModel.findByAwayTeam(team.awayTeamId);
-        const teamInstance = await this.teamModel.findById(team.awayTeamId);
+        const teamMatches = await this.matchModel.findByAwayTeam(team.id);
+        const teamInstance = await this.teamModel.findById(team.id);
         const teamName = teamInstance?.teamName ?? '';
         const editLeaderboard = LeaderboardService.editPatternLeaderboard(teamMatches);
         return { name: teamName, ...editLeaderboard };
       }));
+    const sortLeaderboard = LeaderboardService.toSort(finalLeaderboard);
 
-    return { status: 'SUCCESSFUL', data: finalLeaderboard };
+    return { status: 'SUCCESSFUL', data: sortLeaderboard };
   }
 }
