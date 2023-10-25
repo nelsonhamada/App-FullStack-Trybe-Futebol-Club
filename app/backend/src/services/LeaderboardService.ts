@@ -78,7 +78,6 @@ export default class LeaderboardService {
   }
 
   public async getHomeLeaderboard(): Promise<ServiceResponse<IHomeEdit[]>> {
-    // const allMatches = await this.matchModel.findAllByQuery('false');
     const allTeams = await this.teamModel.findAll();
 
     const finalLeaderboard = await Promise.all(allTeams
@@ -95,7 +94,6 @@ export default class LeaderboardService {
   }
 
   public async getAwayLeaderboard(): Promise<ServiceResponse<IHomeEdit[]>> {
-    // const allMatches = await this.matchModel.findAllByQuery('false');
     const allTeams = await this.teamModel.findAll();
 
     const finalLeaderboard = await Promise.all(allTeams
@@ -109,5 +107,42 @@ export default class LeaderboardService {
     const sortLeaderboard = LeaderboardService.toSort(finalLeaderboard);
 
     return { status: 'SUCCESSFUL', data: sortLeaderboard };
+  }
+
+  // eslint-disable-next-line max-lines-per-function
+  public async getTeamsLeaderboard(): Promise<ServiceResponse<IHomeEdit[]>> {
+    const awayLeaderboardResponse = await this.getAwayLeaderboard();
+    const homeLeaderboardResponse = await this.getHomeLeaderboard();
+
+    // Achar uma solução melhor para [Symbol.iterator]
+    if ('data' in awayLeaderboardResponse && Array.isArray(awayLeaderboardResponse.data)
+      && 'data' in homeLeaderboardResponse && Array.isArray(homeLeaderboardResponse.data)) {
+      const combinedLeaderboard = [
+        ...awayLeaderboardResponse.data,
+        ...homeLeaderboardResponse.data,
+      ];
+
+      const result = combinedLeaderboard.reduce((acc: IHomeEdit[], curr) => {
+        const found = acc.find((team) => team.name === curr.name);
+        if (found) {
+          found.totalPoints += curr.totalPoints;
+          found.totalGames += curr.totalGames;
+          found.efficiency = ((found.totalPoints / (found.totalGames * 3)) * 100).toFixed(2);
+          found.totalVictories += curr.totalVictories;
+          found.totalDraws += curr.totalDraws;
+          found.totalLosses += curr.totalLosses;
+          found.goalsFavor += curr.goalsFavor;
+          found.goalsOwn += curr.goalsOwn;
+          found.goalsBalance += curr.goalsBalance;
+        } else {
+          acc.push({ ...curr });
+        }
+        return acc;
+      }, []);
+      const sortLeaderboard = LeaderboardService.toSort(result);
+
+      return { status: 'SUCCESSFUL', data: sortLeaderboard };
+    }
+    return { status: 'INVALID_DATA', data: { message: 'Unknown error' } };
   }
 }
