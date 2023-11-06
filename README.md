@@ -28,7 +28,7 @@ git clone git@github.com:nelsonhamada/nelson-hamada-API-Trybe-Futebol-Club.git
 
 Entre no diretório clonado e instale as dependências:
 ```
-cd Trybe-Futebol-Club
+cd App-FullStack-Trybe-Futebol-Club
 npm run install:apps
 ```
 
