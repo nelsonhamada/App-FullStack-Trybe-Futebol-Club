@@ -1,6 +1,6 @@
 # Trybe Futebol Club
 
-Utilizando SOLID em POO foi desenvolvida uma aplicação Full Stack que simula um site informativo sobre partidas e classificações de futebol! ⚽️
+Utilizando SOLID em POO foi desenvolvida uma aplicação Full Stack que simula um site informativo sobre partidas e classificações de futebol!
 Onde você pode editar ou finalizar jogos em andamentos, conferir placares de líderes, inclusive aplicar filtros de jogos em casa ou fora.
 Foi criado uma API-Restful em Node com Typescript que utiliza o Sequelize para persistir os dados em SQL e popular o Front-end.
 
